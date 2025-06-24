@@ -51,14 +51,13 @@ class PlgFabrik_FormMetadata extends PlgFabrik_Form {
         $formData = $model->getData();
 
         foreach ($elements as $element) {
+            $name = $element->getFullName(true, false);
 
-            if ($element->getElement()->plugin === 'textarea' && !isset($description)) {
-                $name = $element->getFullName(true, false);
+            if ($element->getElement()->plugin === 'textarea' && !isset($description) && stripos($name, 'indexing_text') === false) {
                 $description = $formData[$name] ?? null;
             }
 
             if ($element->getElement()->plugin === 'fileupload' && !isset($image)) {
-                $name = $element->getFullName(true, false);
                 $params = $element->getParams();
                 if($params->get('ajax_upload') == '0'){
                     $image = $formData[$name] ?? null;
@@ -76,7 +75,6 @@ class PlgFabrik_FormMetadata extends PlgFabrik_Form {
             }
 
             if ($element->getElement()->plugin === 'field' && !isset($title)) {
-                $name = $element->getFullName(true, false);
                 $title = $formData[$name] ?? null;
             }
 
@@ -88,7 +86,6 @@ class PlgFabrik_FormMetadata extends PlgFabrik_Form {
         $this->setOgTags($title, $description, $image);
         $this->setTwitterTags($title, $description, $image);
         $this->setTags($title, $description, $image);
-
     }
     
     /**
@@ -102,13 +99,13 @@ class PlgFabrik_FormMetadata extends PlgFabrik_Form {
      */
     public function setOgTags($title, $description, $image)
     {
-        $this->app->getDocument()->setMetaData('og:title', strip_tags($title));
-        $this->app->getDocument()->setMetaData('og:description', strip_tags($description));
-        $this->app->getDocument()->setMetaData('og:type', 'website');
+        $this->app->getDocument()->setMetaData('og:title', strip_tags($title), 'property');
+        $this->app->getDocument()->setMetaData('og:description', strip_tags($description), 'property');
+        $this->app->getDocument()->setMetaData('og:type', 'website', 'property');
 
         if(!empty($image)) {
             $image = Uri::root() . ltrim($image, '/');
-            $this->app->getDocument()->setMetaData('og:image', $image);
+            $this->app->getDocument()->setMetaData('og:image', $image, 'property');
         }
     }
 
@@ -123,13 +120,13 @@ class PlgFabrik_FormMetadata extends PlgFabrik_Form {
      */
     public function setTwitterTags($title, $description, $image)
     {
-        $this->app->getDocument()->setMetaData('twitter:title', strip_tags($title));
-        $this->app->getDocument()->setMetaData('twitter:description', strip_tags($description));
-        $this->app->getDocument()->setMetaData('twitter:card', 'summary_large_image');
+        $this->app->getDocument()->setMetaData('twitter:title', strip_tags($title), 'property');
+        $this->app->getDocument()->setMetaData('twitter:description', strip_tags($description), 'property');
+        $this->app->getDocument()->setMetaData('twitter:card', 'summary_large_image', 'property');
 
         if(!empty($image)) {
             $image = Uri::root() . ltrim($image, '/');
-            $this->app->getDocument()->setMetaData('twitter:image', $image);
+            $this->app->getDocument()->setMetaData('twitter:image', $image, 'property');
         }
     }
 
@@ -144,12 +141,12 @@ class PlgFabrik_FormMetadata extends PlgFabrik_Form {
      */
     public function setTags($title, $description, $image)
     {
-        $this->app->getDocument()->setMetaData('title', strip_tags($title));
-        $this->app->getDocument()->setMetaData('description', strip_tags($description));
+        $this->app->getDocument()->setMetaData('title', strip_tags($title), 'property');
+        $this->app->getDocument()->setMetaData('description', strip_tags($description), 'property');
 
         if(!empty($image)) {
             $image = Uri::root() . ltrim($image, '/');
-            $this->app->getDocument()->setMetaData('image', $image);
+            $this->app->getDocument()->setMetaData('image', $image, 'property');
         }   
     }
 

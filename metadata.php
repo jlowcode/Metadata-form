@@ -54,7 +54,7 @@ class PlgFabrik_FormMetadata extends PlgFabrik_Form {
             $name = $element->getFullName(true, false);
 
             if ($element->getElement()->plugin === 'textarea' && !isset($description) && stripos($name, 'indexing_text') === false) {
-                $description = $formData[$name] ?? null;
+                $description = strip_tags($formData[$name]) ?? null;
             }
 
             if ($element->getElement()->plugin === 'fileupload' && !isset($image)) {
@@ -72,10 +72,12 @@ class PlgFabrik_FormMetadata extends PlgFabrik_Form {
                 } else {
                     $image = $formData[$name][0];
                 }
+
+                $image = strip_tags($image);
             }
 
             if ($element->getElement()->plugin === 'field' && !isset($title)) {
-                $title = $formData[$name] ?? null;
+                $title = strip_tags($formData[$name]) ?? null;
             }
 
             if (isset($description) && isset($image) && isset($title)) {
@@ -149,5 +151,4 @@ class PlgFabrik_FormMetadata extends PlgFabrik_Form {
             $this->app->getDocument()->setMetaData('image', $image, 'property');
         }   
     }
-
 }

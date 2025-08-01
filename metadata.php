@@ -50,6 +50,10 @@ class PlgFabrik_FormMetadata extends PlgFabrik_Form {
         $elements = $model->getListModel()->getElements();
         $formData = $model->getData();
 
+        if($model->isNewRecord()) {
+            return;
+        }
+
         foreach ($elements as $element) {
             $name = $element->getFullName(true, false);
 
